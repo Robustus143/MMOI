@@ -1,0 +1,109 @@
+---
+title: "lab5"
+output: html_document
+date: "2022-11-15"
+---
+```{r}
+library(forecast)
+library(ggplot2)
+library(fUnitRoots)
+library(tsibble)
+m <- monthly_beer_production_in_austr$Month
+pr <- monthly_beer_production_in_austr$`Monthly beer production`
+```
+
+```{r}
+plot(pr)
+plot.ts(pr, ylab="Monthly beer production")
+```
+
+```{r}
+ggseasonplot(pr)
+```
+
+```{r}
+ggsubseriesplot(pr) +
+  ylab("Monthly beer production")
+```
+
+```{r}
+plot.ts(log(pr))
+```
+```{r}
+adfTest(pr)
+```
+```{r}
+adfTest(log(pr))
+```
+
+```{r}
+adfTest(diff(log(pr)))
+```
+
+```{r}
+lam <- BoxCox.lambda(pr)
+lam
+```
+```{r}
+autoplot(BoxCox(pr,lam)) 
+```
+
+
+```{r}
+Air.2transf <- cbind("Степенева"= BoxCox(pr, lam),
+                     "Степінь = 0.3" = BoxCox(pr, lambda = .3),
+               "Логарифмічна" = BoxCox(pr, lambda = 0))
+autoplot(Air.2transf, facets = T)+
+  xlab("") + ylab("Трансформована кількість")
+```
+
+```{r}
+acf(log(pr))
+```
+```{r}
+pacf(log(pr))
+```     
+
+```{r}
+hw1 <- HoltWinters(pr)
+hw1
+```
+
+```{r}
+plot(hw1)
+```
+
+```{r}
+plot(diff(log(pr)))
+```
+
+```{r}
+res.pr.naive <- residuals(naive(diff(pr)))
+autoplot(res.pr.naive)
+```
+
+```{r}
+gghistogram(res.pr.naive)
+
+```
+```{r}
+Box.test(res.pr.naive, lag=20)
+```
+```{r}
+checkresiduals(res.pr.naive, test=FALSE)
+```
+```{r}
+f <- auto.arima(log(pr))
+autoplot(forecast(f, level = c(95), h = 50))
+```
+
+```{r}
+acf(f$residuals)
+```
+
+```{r}
+Box.test(f$residuals, type="Ljung-Box")
+```
+
+
+

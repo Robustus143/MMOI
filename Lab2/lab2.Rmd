@@ -1,0 +1,26 @@
+library(corrplot)
+library(qgraph)
+library(car)
+library(carData)
+
+r <- mobiles$ram
+h <- mobiles$px_height
+w <- mobiles$px_width
+
+
+plot(~ r + h + w, col = 'black', lower.panel = NULL)
+
+
+cor_mob = cor(mobiles[,13:15])
+
+
+corrplot(cor_mob, method = "circle",bg="ivory", 
+addCoef.col = "white", order = "original")
+
+qgraph(cor_mob, shape ="square")
+
+
+cor.test(r, h)
+cor.test(r, h, method = "spearman", exact=F)
+cor.test(r, h, method = "kendal", exact=F)
+

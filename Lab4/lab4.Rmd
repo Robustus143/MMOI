@@ -1,0 +1,100 @@
+---
+title: "lab4"
+output: html_document
+---
+```{r}
+library(ggplot2) 
+c <- global_rd$country
+a <- global_rd$rd_amount_com
+u <- global_rd$rd_amount_univ
+```
+
+```{r}
+stripchart(a ~ c, xlab = "Amount",  
+           ylab ="Country", col=c("red", "green", "blue", "purple", "black", "brown"), 
+           method = "jitter")
+```
+
+```{r}
+boxplot(a ~ c, data = global_research_and_development,
+        xlab = "Country", ylab = "Amount", col = c("red", "green", "blue", "purple", "black", "brown"))
+```
+
+```{r}
+aggregate(x = a, by = list(c), FUN = mean)
+```
+
+```{r}
+mod1 <- aov(a ~ c)
+summary(aov(a ~ c))
+```
+
+```{r}
+summary(lm(a ~ c, data = global_research_and_development))
+```
+
+```{r}
+bartlett.test(a ~ c)
+```
+```{r}
+tapply(a, c, var)
+```
+
+```{r}
+library(ggpubr)
+ggqqplot(mod1$residuals, color = "green3")
+```
+
+```{r}
+shapiro.test(mod1$residuals)
+```
+```{r}
+TukeyHSD(aov(a ~ c, data = global_rd))
+
+```
+```{r}
+plot(TukeyHSD(aov(a ~ c, data = global_rd)))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
